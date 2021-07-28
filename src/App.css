@@ -40,3 +40,8 @@
 input.tweet-url {
   width: 50em;
 }
+
+div.photo {
+  float: left;
+  padding: 0.5em;
+}
