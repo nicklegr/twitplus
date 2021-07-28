@@ -37,8 +37,9 @@
   }
 }
 
-input.tweet-url {
+textarea.tweet-url {
   width: 50em;
+  height: 10em;
 }
 
 div.photo {

@@ -2,26 +2,27 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import './App.css';
 
 const App = () => {
-  const [tweetUrl, setTweetUrl] = useState("")
-  const [statusId, setStatusId] = useState("")
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
+  const [statusIds, setStatusIds] = useState<string[]>([])
+  const onTweetUrlsChange = (text: string) => {
     const tweetUrlRegex = /^https:\/\/twitter.com\/\w+?\/status(?!es)?\/(\d+)/
-    const match = tweetUrl.match(tweetUrlRegex)
-    if (!match) {
-      return
+    let ids: string[] = []
+    for (const line of text.split("\n")) {
+      const match = line.match(tweetUrlRegex)
+      if (!match) {
+        continue
+      }
+      ids.push(match[1])
     }
-    setStatusId(match[1])
+    setStatusIds(ids)
   };
 
   return (
     <div className="App">
-      <form onSubmit={handleSubmit}>
-        Tweet URL: <input className="tweet-url" type="text" onChange={(e) => setTweetUrl(e.target.value)} />
+      <form>
+        Tweet URL: <textarea className="tweet-url" onChange={(e) => onTweetUrlsChange(e.target.value)} />
       </form>
       <hr />
-      { statusId ? <Tweet status_id={statusId} /> : <></> }
+      { statusIds.map(x => <Tweet status_id={x} />) }
     </div>
   )
 }
