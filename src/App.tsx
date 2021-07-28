@@ -21,7 +21,6 @@ const App = () => {
       <form>
         Tweet URL: <textarea className="tweet-url" onChange={(e) => onTweetUrlsChange(e.target.value)} />
       </form>
-      <hr />
       { statusIds.map(x => <Tweet status_id={x} />) }
     </div>
   )
@@ -46,6 +45,7 @@ const Tweet = ({status_id}: {status_id: string}) => {
 
   return (
     <div className="tweet">
+      <hr />
       <div className="tweet-desc">
         <img src={tweet?.user?.profile_image_url_https} alt="" />
         <a href={`https://twitter.com/${tweet?.user?.screen_name}`}>@{tweet?.user?.screen_name}</a>
