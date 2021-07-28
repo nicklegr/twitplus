@@ -1,10 +1,9 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import './App.css';
 
 const App = () => {
   const [tweetUrl, setTweetUrl] = useState("")
-  const [photoUrls, setPhotoUrls] = useState(new Array<string>());
-  const [tweet, setTweet] = useState(null);
+  const [statusId, setStatusId] = useState("")
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -13,15 +12,7 @@ const App = () => {
     if (!match) {
       return
     }
-    const status_id = match[1]
-
-    let res = await fetch(`http://localhost:8080/api/v1/photos?status_id=${status_id}`)
-    let body = await res.json()
-    setPhotoUrls(body)
-
-    res = await fetch(`http://localhost:8080/api/v1/tweet?status_id=${status_id}`)
-    body = await res.json()
-    setTweet(body)
+    setStatusId(match[1])
   };
 
   return (
@@ -30,6 +21,30 @@ const App = () => {
         Tweet URL: <input className="tweet-url" type="text" onChange={(e) => setTweetUrl(e.target.value)} />
       </form>
       <hr />
+      { statusId ? <Tweet status_id={statusId} /> : <></> }
+    </div>
+  )
+}
+
+const Tweet = ({status_id}: {status_id: string}) => {
+  const [photoUrls, setPhotoUrls] = useState(new Array<string>());
+  const [tweet, setTweet] = useState(null);
+
+  useEffect(() => {
+    const f = async () => {
+      let res = await fetch(`http://localhost:8080/api/v1/photos?status_id=${status_id}`)
+      let body = await res.json()
+      setPhotoUrls(body)
+
+      res = await fetch(`http://localhost:8080/api/v1/tweet?status_id=${status_id}`)
+      body = await res.json()
+      setTweet(body)
+    }
+    f()
+  }, [status_id])
+
+  return (
+    <div className="tweet">
       { photoUrls.map((x, i) => <Photo url={x} tweet={tweet} index={i + 1} />) }
     </div>
   )
