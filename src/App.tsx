@@ -28,7 +28,7 @@ const App = () => {
 
 const Tweet = ({status_id}: {status_id: string}) => {
   const [photoUrls, setPhotoUrls] = useState(new Array<string>());
-  const [tweet, setTweet] = useState(null);
+  const [tweet, setTweet] = useState<any>(null);
 
   useEffect(() => {
     const f = async () => {
@@ -45,7 +45,15 @@ const Tweet = ({status_id}: {status_id: string}) => {
 
   return (
     <div className="tweet">
-      { photoUrls.map((x, i) => <Photo url={x} tweet={tweet} index={i + 1} />) }
+      <div className="tweet-desc">
+        <img src={tweet?.user?.profile_image_url_https} alt="" />
+        <a href={`https://twitter.com/${tweet?.user?.screen_name}`}>@{tweet?.user?.screen_name}</a>
+        <br />
+        <span>{tweet?.full_text}</span>
+      </div>
+      <div className="tweet-thumbs">
+        { photoUrls.map((x, i) => <Photo url={x} tweet={tweet} index={i + 1} />) }
+      </div>      
     </div>
   )
 }
