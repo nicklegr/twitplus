@@ -15,13 +15,12 @@ const App = () => {
     }
     const status_id = match[1]
 
-    {
-      fetch(`http://localhost:8080/api/v1/photos?status_id=${status_id}`)
-        .then(x => x.json())
-        .then(x => setPhotoUrls(x))
-    }
-    let res = await fetch(`http://localhost:8080/api/v1/tweet?status_id=${status_id}`)
+    let res = await fetch(`http://localhost:8080/api/v1/photos?status_id=${status_id}`)
     let body = await res.json()
+    setPhotoUrls(body)
+
+    res = await fetch(`http://localhost:8080/api/v1/tweet?status_id=${status_id}`)
+    body = await res.json()
     setTweet(body)
   };
 
