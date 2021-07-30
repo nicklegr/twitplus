@@ -14,7 +14,7 @@ const App = () => {
       ids.push(match[1])
     }
     setStatusIds(ids)
-  };
+  }
 
   return (
     <div className="App">
@@ -28,8 +28,8 @@ const App = () => {
 
 const Tweet = ({status_id}: {status_id: string}) => {
   const [isNotFound, setIsNotFound] = useState(false)
-  const [photoUrls, setPhotoUrls] = useState(new Array<string>());
-  const [tweet, setTweet] = useState<any>(null);
+  const [photoUrls, setPhotoUrls] = useState(new Array<string>())
+  const [tweet, setTweet] = useState<any>(null)
 
   useEffect(() => {
     const f = async () => {
