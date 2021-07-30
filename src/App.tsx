@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 
 const App = () => {
@@ -21,7 +21,7 @@ const App = () => {
       <form>
         Tweet URL: <textarea className="tweet-url" onChange={(e) => onTweetUrlsChange(e.target.value)} />
       </form>
-      { statusIds.map(x => <Tweet status_id={x} />) }
+      { statusIds.map(x => <Tweet key={x} status_id={x} />) }
     </div>
   )
 }
@@ -65,7 +65,7 @@ const Tweet = ({status_id}: {status_id: string}) => {
           <span>{tweet?.full_text}</span>
         </div>
         <div className="tweet-thumbs">
-          { photoUrls.map((x, i) => <Photo url={x} tweet={tweet} index={i + 1} />) }
+          { photoUrls.map((x, i) => <Photo key={`${status_id}-${i}`} url={x} tweet={tweet} index={i + 1} />) }
         </div>
       </div>
     )
