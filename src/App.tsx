@@ -35,7 +35,7 @@ const Tweet = ({status_id}: {status_id: string}) => {
 
   useEffect(() => {
     const f = async () => {
-      let res = await fetch(`http://localhost:8080/api/v1/photos?status_id=${status_id}`)
+      let res = await fetch(`/api/v1/photos?status_id=${status_id}`)
       if (!res.ok) {
         setIsNotFound(true)
         return
@@ -43,7 +43,7 @@ const Tweet = ({status_id}: {status_id: string}) => {
       let body = await res.json()
       setPhotoUrls(body)
 
-      res = await fetch(`http://localhost:8080/api/v1/tweet?status_id=${status_id}`)
+      res = await fetch(`/api/v1/tweet?status_id=${status_id}`)
       if (!res.ok) {
         setIsNotFound(true)
         return
@@ -88,7 +88,7 @@ const Photo = ({url, tweet, index}: {url: string, tweet: any, index: number}) =>
 
   return (
     <div className="photo">
-      <a href={`http://localhost:8080/api/v1/download_image?screen_name=${tweet.user.screen_name}&status_id=${tweet.id_str}&index=${index}&url=${url}`}>
+      <a href={`/api/v1/download_image?screen_name=${tweet.user.screen_name}&status_id=${tweet.id_str}&index=${index}&url=${url}`}>
         <img alt="" src={`${url}?name=thumb`} />
       </a>
     </div>
