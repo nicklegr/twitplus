@@ -16,6 +16,8 @@ const App = () => {
     setStatusIds(ids)
   }
 
+  useEffect(() => { document.title = "Twitplus" })
+
   return (
     <div className="App">
       <form>
