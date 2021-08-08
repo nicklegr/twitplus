@@ -3,11 +3,11 @@ FROM node:14.17.3-alpine as frontend-build
 
 WORKDIR /frontend
 
-# スクリプトに変更があっても、yarn installをキャッシュさせる
-COPY ["package.json", "yarn.lock", "/frontend"]
+# スクリプトに変更があっても、bundle installをキャッシュさせる
+COPY ["frontend/package.json", "frontend/yarn.lock", "/frontend/"]
 RUN yarn install
 
-COPY . /frontend
+COPY frontend /frontend/
 
 RUN yarn build
 
@@ -20,11 +20,11 @@ RUN dpkg-reconfigure -f noninteractive tzdata
 WORKDIR /server
 
 # スクリプトに変更があっても、bundle installをキャッシュさせる
-COPY Gemfile /server/
-COPY Gemfile.lock /server/
+COPY server/Gemfile /server/
+COPY server/Gemfile.lock /server/
 RUN bundle install --deployment --without=test --jobs 4
 
-COPY . /server
+COPY server /server
 
 # merge
 FROM gcr.io/distroless/base-debian10
