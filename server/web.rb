@@ -2,7 +2,6 @@
 
 require 'pp'
 require 'json'
-require 'yaml'
 require 'sinatra'
 require 'sinatra/reloader'
 require 'sinatra/url_for'
@@ -16,12 +15,11 @@ $last_auth_time = nil
 
 def twitter_client
   if !$last_auth_time || Time.now - $last_auth_time > 300
-    yaml = YAML.load_file('config.yaml')
     $client = Twitter::REST::Client.new do |config|
-      config.consumer_key = yaml['consumer_key']
-      config.consumer_secret = yaml['consumer_secret']
-      config.access_token = yaml['oauth_token']
-      config.access_token_secret = yaml['oauth_token_secret']
+      config.consumer_key = ENV["CONSUMER_KEY"]
+      config.consumer_secret = ENV["CONSUMER_SECRET"]
+      config.access_token = ENV["OAUTH_TOKEN"]
+      config.access_token_secret = ENV["OAUTH_TOKEN_SECRET"]
     end
     $last_auth_time = Time.now
   end
