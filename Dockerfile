@@ -12,26 +12,21 @@ COPY frontend /frontend/
 RUN yarn build
 
 # build server
-FROM ruby:2.6.3 as server-build
+FROM ruby:2.6.3
 
 RUN echo "Asia/Tokyo" > /etc/timezone
 RUN dpkg-reconfigure -f noninteractive tzdata
 
-WORKDIR /server
-
-# スクリプトに変更があっても、bundle installをキャッシュさせる
-COPY server/Gemfile /server/
-COPY server/Gemfile.lock /server/
-RUN bundle install --deployment --without=test --jobs 4
-
-COPY server /server
-
-# merge
-FROM gcr.io/distroless/base-debian10
-
 WORKDIR /app
 
-COPY --from=frontend-build --chown=nobody:nobody /frontend/build /app/
-COPY --from=server-build --chown=nobody:nobody /server/* /app/
+# スクリプトに変更があっても、bundle installをキャッシュさせる
+COPY server/Gemfile /app/
+COPY server/Gemfile.lock /app/
+RUN bundle install --deployment --without=test --jobs 4
+
+COPY server /app/
+
+# merge frontend
+COPY --from=frontend-build --chown=root:root /frontend/build /app/build/
 
 EXPOSE 80
