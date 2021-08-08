@@ -46,6 +46,10 @@ def image_urls(status)
   urls.compact
 end
 
+get "/" do
+  redirect "/index.html"
+end
+
 get "/api/v1/tweet" do
   status_id = params[:status_id].to_i
 
