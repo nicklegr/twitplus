@@ -28,6 +28,5 @@ COPY server /app/
 # merge frontend
 COPY --from=frontend-build --chown=root:root /frontend/build /app/build/
 
-ENTRYPOINT ["bundle" "exec" "rackup" "-o" "0.0.0.0" "-p" "8080"]
-
-EXPOSE 8080
+# 長期に実行している ENTRYPOINT の実行バイナリに対し、 docker stop で適切にシグナルを送るには、 exec で起動する必要がある
+ENTRYPOINT exec bundle exec rackup -o 0.0.0.0 -p $PORT
