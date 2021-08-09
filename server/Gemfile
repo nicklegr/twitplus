@@ -9,3 +9,5 @@ gem 'sinatra'
 gem 'sinatra-reloader'
 gem 'thin'
 gem 'emk-sinatra-url-for'
+
+gem 'dotenv'

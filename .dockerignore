@@ -3,3 +3,4 @@
 /frontend/build
 /frontend/node_modules
 /server/config.yaml
+/server/.env
