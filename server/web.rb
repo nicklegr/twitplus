@@ -48,7 +48,7 @@ def image_urls(status)
 end
 
 get "/" do
-  redirect "/index.html"
+  send_file File.join(settings.public_folder, "index.html")
 end
 
 get "/api/v1/tweet" do
