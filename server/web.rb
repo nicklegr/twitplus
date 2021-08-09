@@ -87,7 +87,7 @@ get "/api/v1/download_image" do
   image = open(orig_url).read
 
   content_type "image/jpeg"
-  attachment "#{screen_name}_#{status_id}_#{index + 1}_orig.jpg"
+  attachment "#{screen_name}-#{status_id}-#{index + 1}-orig.jpg"
   image
 end
 
