@@ -28,4 +28,6 @@ COPY server /app/
 # merge frontend
 COPY --from=frontend-build --chown=root:root /frontend/build /app/build/
 
-EXPOSE 80
+ENTRYPOINT ["bundle" "exec" "rackup" "-o" "0.0.0.0" "-p" "8080"]
+
+EXPOSE 8080
