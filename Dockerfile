@@ -14,8 +14,7 @@ RUN yarn build
 # build server
 FROM ruby:2.6.3
 
-RUN echo "Asia/Tokyo" > /etc/timezone
-RUN dpkg-reconfigure -f noninteractive tzdata
+RUN ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
 WORKDIR /app
 
