@@ -3,14 +3,16 @@ import './App.css';
 
 class API {
   static async photos(status_id: string) {
-    return fetch(`/api/v1/photos?status_id=${status_id}`)
+    return fetch(`${this.url_prefix}/api/v1/photos?status_id=${status_id}`)
   }
   static async tweet(status_id: string) {
-    return fetch(`/api/v1/tweet?status_id=${status_id}`)
+    return fetch(`${this.url_prefix}/api/v1/tweet?status_id=${status_id}`)
   }
   static download_image_url(screen_name: string, status_id: string, index: number, url: string) {
-    return `/api/v1/download_image?screen_name=${screen_name}&status_id=${status_id}&index=${index}&url=${url}`;
+    return `${this.url_prefix}/api/v1/download_image?screen_name=${screen_name}&status_id=${status_id}&index=${index}&url=${url}`;
   }
+
+  private static url_prefix = process.env.NODE_ENV === "production" ? "" : "http://localhost:8080"
 }
 
 const App = () => {
