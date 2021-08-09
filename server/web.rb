@@ -75,17 +75,19 @@ get "/api/v1/photos" do
 end
 
 get "/api/v1/download_image" do
-  screen_name = params[:screen_name]
   status_id = params[:status_id].to_i
   index = params[:index].to_i
-  url = params[:url]
+
+  status = twitter_client.status(status_id, tweet_mode: "extended").to_h
+  image_url = image_urls(status)[index]
+  screen_name = status[:user][:screen_name]
 
   # TODO: 404をrescue
-  orig_url = "#{url}?name=orig"
+  orig_url = "#{image_url}?name=orig"
   image = open(orig_url).read
 
   content_type "image/jpeg"
-  attachment "#{screen_name}_#{status_id}_#{index}_orig.jpg"
+  attachment "#{screen_name}_#{status_id}_#{index + 1}_orig.jpg"
   image
 end
 

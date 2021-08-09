@@ -8,8 +8,8 @@ class API {
   static async tweet(status_id: string) {
     return fetch(`${this.url_prefix}/api/v1/tweet?status_id=${status_id}`)
   }
-  static download_image_url(screen_name: string, status_id: string, index: number, url: string) {
-    return `${this.url_prefix}/api/v1/download_image?screen_name=${screen_name}&status_id=${status_id}&index=${index}&url=${url}`;
+  static download_image_url(status_id: string, index: number) {
+    return `${this.url_prefix}/api/v1/download_image?status_id=${status_id}&index=${index}`;
   }
 
   private static url_prefix = process.env.NODE_ENV === "production" ? "" : "http://localhost:8080"
@@ -81,7 +81,7 @@ const Tweet = ({status_id}: {status_id: string}) => {
           <span>{tweet?.full_text}</span>
         </div>
         <div className="tweet-thumbs">
-          { photoUrls.map((x, i) => <Photo key={`${status_id}-${i}`} url={x} tweet={tweet} index={i + 1} />) }
+          { photoUrls.map((x, i) => <Photo key={`${status_id}-${i}`} url={x} tweet={tweet} index={i} />) }
         </div>
       </div>
     )
@@ -102,7 +102,7 @@ const Photo = ({url, tweet, index}: {url: string, tweet: any, index: number}) =>
 
   return (
     <div className="photo">
-      <a href={API.download_image_url(tweet.user.screen_name, tweet.id_str, index, url)}>
+      <a href={API.download_image_url(tweet.id_str, index)}>
         <img alt="" src={`${url}?name=thumb`} />
       </a>
     </div>
