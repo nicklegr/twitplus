@@ -72,8 +72,3 @@ get "/api/v1/download_image" do
   attachment "#{screen_name}-#{status_id}-#{index + 1}-orig.jpg"
   image
 end
-
-get "/api/v1/rate_limit" do
-  content_type "application/json"
-  Twitter::REST::Request.new(twitter_client, :get, '/1.1/application/rate_limit_status.json').perform[:resources].to_json
-end
