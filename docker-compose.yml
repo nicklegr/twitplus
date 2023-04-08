@@ -9,12 +9,8 @@ services:
       VIRTUAL_HOST: ${VIRTUAL_HOST}
       PORT: "8080"
       LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
-      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
       # LETSENCRYPT_TEST: "true"
-      CONSUMER_KEY: ${CONSUMER_KEY}
-      CONSUMER_SECRET: ${CONSUMER_SECRET}
-      OAUTH_TOKEN: ${OAUTH_TOKEN}
-      OAUTH_TOKEN_SECRET: ${OAUTH_TOKEN_SECRET}
+      API_BASE_URI: ${API_BASE_URI}
     restart: unless-stopped
     networks:
       - default

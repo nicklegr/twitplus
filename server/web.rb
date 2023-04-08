@@ -5,7 +5,6 @@ require 'json'
 require 'sinatra'
 require 'sinatra/reloader'
 require 'sinatra/url_for'
-require 'twitter'
 require 'open-uri'
 require 'dotenv'
 
@@ -13,30 +12,16 @@ Dotenv.load
 
 set :public_folder, __dir__ + '/build'
 
-$client = nil
-$last_auth_time = nil
-
-def twitter_client
-  if !$last_auth_time || Time.now - $last_auth_time > 300
-    $client = Twitter::REST::Client.new do |config|
-      config.consumer_key = ENV["CONSUMER_KEY"]
-      config.consumer_secret = ENV["CONSUMER_SECRET"]
-      config.access_token = ENV["OAUTH_TOKEN"]
-      config.access_token_secret = ENV["OAUTH_TOKEN_SECRET"]
-    end
-    $last_auth_time = Time.now
-  end
-
-  $client
+def get_tweet(status_id)
+  uri = "#{ENV["API_BASE_URI"]}/2/tweets/#{status_id}"
+  JSON.parse(URI.open(uri).read, symbolize_names: true)
 end
 
 def image_urls(status)
   # https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/extended-entities-object
-  return [] unless status[:extended_entities]
+  return [] unless status[:data][:extended_entities]
 
-  status = status[:retweeted_status] if status[:retweeted_status]
-
-  urls = status[:extended_entities][:media].map do |media|
+  urls = status[:data][:extended_entities][:media].map do |media|
     if media[:type] != "photo" # photo, video, animated_gif
       nil
     else
@@ -56,9 +41,9 @@ get "/api/v1/tweet" do
 
   begin
     content_type "application/json"
-    twitter_client.status(status_id, tweet_mode: "extended").to_h.to_json
-  rescue Twitter::Error::NotFound => e
-    404
+    get_tweet(status_id).to_json
+  rescue OpenURI::HTTPError => e
+    return [404, {error: "API request failed: #{e.message}"}.to_json]
   end
 end
 
@@ -66,11 +51,11 @@ get "/api/v1/photos" do
   status_id = params[:status_id].to_i
 
   begin
-    status = twitter_client.status(status_id, tweet_mode: "extended").to_h
+    status = get_tweet(status_id)
     content_type "application/json"
     image_urls(status).to_json
-  rescue Twitter::Error::NotFound => e
-    404
+  rescue OpenURI::HTTPError => e
+    return [404, {error: "API request failed: #{e.message}"}.to_json]
   end
 end
 
@@ -78,9 +63,9 @@ get "/api/v1/download_image" do
   status_id = params[:status_id].to_i
   index = params[:index].to_i
 
-  status = twitter_client.status(status_id, tweet_mode: "extended").to_h
+  status = get_tweet(status_id)
   image_url = image_urls(status)[index]
-  screen_name = status[:user][:screen_name]
+  screen_name = status[:includes][:user][:screen_name]
 
   # TODO: 404をrescue
   orig_url = "#{image_url}?name=orig"

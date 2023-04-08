@@ -73,12 +73,12 @@ const Tweet = ({status_id}: {status_id: string}) => {
       <div className="tweet">
         <hr />
         <div className="tweet-desc">
-          <img src={tweet?.user?.profile_image_url_https} alt="" />
-          <a href={`https://twitter.com/${tweet?.user?.screen_name}`}>@{tweet?.user?.screen_name}</a>
+          <img src={tweet?.includes?.user?.profile_image_url_https} alt="" />
+          <a href={`https://twitter.com/${tweet?.includes?.user?.screen_name}`}>@{tweet?.includes?.user?.screen_name}</a>
           <span>　</span>
           <a href={`https://twitter.com/dummy/status/${status_id}`}>{status_id}</a>
           <br />
-          <span>{tweet?.full_text}</span>
+          <span>{tweet?.data?.text}</span>
         </div>
         <div className="tweet-thumbs">
           { photoUrls.map((x, i) => <Photo key={`${status_id}-${i}`} url={x} tweet={tweet} index={i} />) }
@@ -102,7 +102,7 @@ const Photo = ({url, tweet, index}: {url: string, tweet: any, index: number}) =>
 
   return (
     <div className="photo">
-      <a href={API.download_image_url(tweet.id_str, index)}>
+      <a href={API.download_image_url(tweet.data.id, index)}>
         <img alt="" src={`${url}?name=thumb`} />
       </a>
     </div>
