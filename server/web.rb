@@ -6,9 +6,6 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'sinatra/url_for'
 require 'open-uri'
-require 'dotenv'
-
-Dotenv.load
 
 set :public_folder, __dir__ + '/build'
 
