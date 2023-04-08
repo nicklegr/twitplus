@@ -30,7 +30,16 @@ const App = () => {
     setStatusIds(ids)
   }
 
-  useEffect(() => { document.title = "Twitplus" })
+  useEffect(() => {
+    document.title = "Twitplus"
+    if (window.location.search != "") {
+      const m = window.location.search.match(/\?uri=https:\/\/twitter.com\/\w+?\/status(?!es)?\/(\d+)/)
+      if (m) {
+        const statusId = m[1]
+        setStatusIds([statusId])
+      }
+    }
+  }, [])
 
   return (
     <div className="App">
