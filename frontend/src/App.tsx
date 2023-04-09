@@ -77,24 +77,7 @@ const Tweet = ({status_id}: {status_id: string}) => {
     f()
   }, [status_id])
 
-  if (!isNotFound) {
-    return (
-      <div className="tweet">
-        <hr />
-        <div className="tweet-desc">
-          <img src={tweet?.includes?.user?.profile_image_url_https} alt="" />
-          <a href={`https://twitter.com/${tweet?.includes?.user?.screen_name}`}>@{tweet?.includes?.user?.screen_name}</a>
-          <span>　</span>
-          <a href={`https://twitter.com/dummy/status/${status_id}`}>{status_id}</a>
-          <br />
-          <span>{tweet?.data?.text}</span>
-        </div>
-        <div className="tweet-thumbs">
-          { photoUrls.map((x, i) => <Photo key={`${status_id}-${i}`} url={x} tweet={tweet} index={i} />) }
-        </div>
-      </div>
-    )
-  } else {
+  if (isNotFound) {
     return (
       <div className="tweet">
         <hr />
@@ -102,6 +85,23 @@ const Tweet = ({status_id}: {status_id: string}) => {
       </div>
     )
   }
+
+  return (
+    <div className="tweet">
+      <hr />
+      <div className="tweet-desc">
+        <img src={tweet?.includes?.user?.profile_image_url_https} alt="" />
+        <a href={`https://twitter.com/${tweet?.includes?.user?.screen_name}`}>@{tweet?.includes?.user?.screen_name}</a>
+        <span>　</span>
+        <a href={`https://twitter.com/dummy/status/${status_id}`}>{status_id}</a>
+        <br />
+        <span>{tweet?.data?.text}</span>
+      </div>
+      <div className="tweet-thumbs">
+        { photoUrls.map((x, i) => <Photo key={`${status_id}-${i}`} url={x} tweet={tweet} index={i} />) }
+      </div>
+    </div>
+  )
 }
 
 const Photo = ({url, tweet, index}: {url: string, tweet: any, index: number}) => {
