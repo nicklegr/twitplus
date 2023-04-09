@@ -16,7 +16,7 @@ end
 
 def image_urls(status)
   # https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/extended-entities-object
-  return [] unless status[:data][:extended_entities]
+  return [] if status[:error] || !status[:data][:extended_entities]
 
   urls = status[:data][:extended_entities][:media].map do |media|
     if media[:type] != "photo" # photo, video, animated_gif

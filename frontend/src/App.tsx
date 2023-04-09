@@ -86,6 +86,15 @@ const Tweet = ({status_id}: {status_id: string}) => {
     )
   }
 
+  if (tweet?.error) {
+    return (
+      <div className="tweet">
+        <hr />
+        {tweet.error.text}: <a href={`https://twitter.com/dummy/status/${status_id}`}>{status_id}</a>
+      </div>
+    )
+  }
+
   return (
     <div className="tweet">
       <hr />
