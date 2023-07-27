@@ -15,6 +15,12 @@ class API {
   private static url_prefix = process.env.NODE_ENV === "production" ? "" : "http://localhost:8080"
 }
 
+class Media {
+  type = "";
+  thumb = "";
+  url = "";
+}
+
 const App = () => {
   const [statusIds, setStatusIds] = useState<string[]>([])
   const onTweetUrlsChange = (text: string) => {
@@ -32,7 +38,7 @@ const App = () => {
 
   useEffect(() => {
     document.title = "Twitplus"
-    if (window.location.search != "") {
+    if (window.location.search !== "") {
       const m = window.location.search.match(/\?uri=https:\/\/twitter.com\/\w+?\/status(?!es)?\/(\d+)/)
       if (m) {
         const statusId = m[1]
@@ -53,7 +59,7 @@ const App = () => {
 
 const Tweet = ({status_id}: {status_id: string}) => {
   const [isNotFound, setIsNotFound] = useState(false)
-  const [photoUrls, setPhotoUrls] = useState(new Array<string>())
+  const [medias, setMedias] = useState(new Array<Media>())
   const [tweet, setTweet] = useState<any>(null)
 
   useEffect(() => {
@@ -64,7 +70,9 @@ const Tweet = ({status_id}: {status_id: string}) => {
         return
       }
       let body = await res.json()
-      setPhotoUrls(body)
+      let medias = new Array<Media>();
+      Object.assign(medias, body);
+      setMedias(medias)
 
       res = await API.tweet(status_id)
       if (!res.ok) {
@@ -107,13 +115,13 @@ const Tweet = ({status_id}: {status_id: string}) => {
         <span>{tweet?.data?.text}</span>
       </div>
       <div className="tweet-thumbs">
-        { photoUrls.map((x, i) => <Photo key={`${status_id}-${i}`} url={x} tweet={tweet} index={i} />) }
+        { medias.map((x, i) => <Photo key={`${status_id}-${i}`} media={x} tweet={tweet} index={i} />) }
       </div>
     </div>
   )
 }
 
-const Photo = ({url, tweet, index}: {url: string, tweet: any, index: number}) => {
+const Photo = ({media, tweet, index}: {media: Media, tweet: any, index: number}) => {
   if (!tweet) {
     return <></>;
   }
@@ -121,7 +129,7 @@ const Photo = ({url, tweet, index}: {url: string, tweet: any, index: number}) =>
   return (
     <div className="photo">
       <a href={API.download_image_url(tweet.data.id, index)}>
-        <img alt="" src={`${url}?name=thumb`} />
+        <img alt="" src={`${media.thumb}`} />
       </a>
     </div>
   )

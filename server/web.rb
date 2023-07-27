@@ -14,19 +14,23 @@ def get_tweet(status_id)
   JSON.parse(URI.open(uri).read, symbolize_names: true)
 end
 
-def image_urls(status)
+def medias(status)
   # https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/extended-entities-object
   return [] if status[:error] || !status[:data][:extended_entities]
 
-  urls = status[:data][:extended_entities][:media].map do |media|
+  medias = status[:data][:extended_entities][:media].map do |media|
     if media[:type] != "photo" # photo, video, animated_gif
       nil
     else
-      media[:media_url_https]
+      {
+        type: media[:type],
+        thumb: media[:media_url_https] + "?name=thumb",
+        url: media[:media_url_https],
+      }
     end
   end
 
-  urls.compact
+  medias.compact
 end
 
 get "/" do
@@ -50,7 +54,7 @@ get "/api/v1/photos" do
   begin
     status = get_tweet(status_id)
     content_type "application/json"
-    image_urls(status).to_json
+    medias(status).to_json
   rescue OpenURI::HTTPError => e
     return [404, {error: "API request failed: #{e.message}"}.to_json]
   end
@@ -61,7 +65,7 @@ get "/api/v1/download_image" do
   index = params[:index].to_i
 
   status = get_tweet(status_id)
-  image_url = image_urls(status)[index]
+  image_url = medias(status)[index][:url]
   screen_name = status[:includes][:user][:screen_name]
 
   # TODO: 404をrescue
