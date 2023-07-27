@@ -19,6 +19,7 @@ def medias(status)
   return [] if status[:error] || !status[:data][:extended_entities]
 
   medias = status[:data][:extended_entities][:media].map do |media|
+    # 音声ツイートも"video"になる
     case media[:type]
     when "photo"
       {
