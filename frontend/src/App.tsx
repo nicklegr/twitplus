@@ -11,6 +11,9 @@ class API {
   static download_image_url(status_id: string, index: number) {
     return `${this.url_prefix}/api/v1/download_image?status_id=${status_id}&index=${index}`;
   }
+  static download_video_url(status_id: string, index: number) {
+    return `${this.url_prefix}/api/v1/download_video?status_id=${status_id}&index=${index}`;
+  }
 
   private static url_prefix = process.env.NODE_ENV === "production" ? "" : "http://localhost:8080"
 }
@@ -126,13 +129,26 @@ const Photo = ({media, tweet, index}: {media: Media, tweet: any, index: number})
     return <></>;
   }
 
-  return (
-    <div className="photo">
-      <a href={API.download_image_url(tweet.data.id, index)}>
-        <img alt="" src={`${media.thumb}`} />
-      </a>
-    </div>
-  )
+  switch (media.type) {
+    case "photo":
+      return (
+        <div className="photo">
+          <a href={API.download_image_url(tweet.data.id, index)}>
+            <img alt="" src={`${media.thumb}`} />
+          </a>
+        </div>
+      )
+    case "video":
+      return (
+        <div className="photo">
+          <a href={API.download_video_url(tweet.data.id, index)}>
+            <img alt="" src={`${media.thumb}`} />
+          </a>
+        </div>
+      )
+    default:
+      return (<div />);
+  }
 }
 
 export default App;

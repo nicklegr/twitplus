@@ -19,14 +19,21 @@ def medias(status)
   return [] if status[:error] || !status[:data][:extended_entities]
 
   medias = status[:data][:extended_entities][:media].map do |media|
-    if media[:type] != "photo" # photo, video, animated_gif
-      nil
-    else
+    case media[:type] # photo, video, animated_gif
+    when "photo"
       {
         type: media[:type],
         thumb: media[:media_url_https] + "?name=thumb",
         url: media[:media_url_https],
       }
+    when "video"
+      {
+        type: media[:type],
+        thumb: media[:media_url_https],
+        url: media[:video_info][:variants].max_by{|e| e[:bitrate] || 0}[:url],
+      }
+    else
+      nil
     end
   end
 
@@ -75,4 +82,20 @@ get "/api/v1/download_image" do
   content_type "image/jpeg"
   attachment "#{screen_name}-#{status_id}-#{index + 1}-orig.jpg"
   image
+end
+
+get "/api/v1/download_video" do
+  status_id = params[:status_id].to_i
+  index = params[:index].to_i
+
+  status = get_tweet(status_id)
+  video_url = medias(status)[index][:url]
+  screen_name = status[:includes][:user][:screen_name]
+
+  # TODO: 404をrescue
+  video = open(video_url).read
+
+  content_type "video/mp4"
+  attachment "#{screen_name}-#{status_id}-#{index + 1}.mp4"
+  video
 end
