@@ -19,14 +19,14 @@ def medias(status)
   return [] if status[:error] || !status[:data][:extended_entities]
 
   medias = status[:data][:extended_entities][:media].map do |media|
-    case media[:type] # photo, video, animated_gif
+    case media[:type]
     when "photo"
       {
         type: media[:type],
         thumb: media[:media_url_https] + "?name=thumb",
         url: media[:media_url_https],
       }
-    when "video"
+    when "video", "animated_gif"
       {
         type: media[:type],
         thumb: media[:media_url_https],

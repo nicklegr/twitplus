@@ -139,6 +139,7 @@ const Photo = ({media, tweet, index}: {media: Media, tweet: any, index: number})
         </div>
       )
     case "video":
+    case "animated_gif":
       return (
         <div className="photo">
           <a href={API.download_video_url(tweet.data.id, index)}>
