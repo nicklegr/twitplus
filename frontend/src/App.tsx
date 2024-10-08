@@ -27,7 +27,7 @@ class Media {
 const App = () => {
   const [statusIds, setStatusIds] = useState<string[]>([])
   const onTweetUrlsChange = (text: string) => {
-    const tweetUrlRegex = /^https:\/\/twitter.com\/\w+?\/status(?!es)?\/(\d+)/
+    const tweetUrlRegex = /^https:\/\/(?:twitter|x)\.com\/\w+?\/status(?!es)?\/(\d+)/
     let ids: string[] = []
     for (const line of text.split("\n")) {
       const match = line.match(tweetUrlRegex)
@@ -42,7 +42,7 @@ const App = () => {
   useEffect(() => {
     document.title = "Twitplus"
     if (window.location.search !== "") {
-      const m = window.location.search.match(/\?uri=https:\/\/twitter.com\/\w+?\/status(?!es)?\/(\d+)/)
+      const m = window.location.search.match(/\?uri=https:\/\/(?:twitter|x)\.com\/\w+?\/status(?!es)?\/(\d+)/)
       if (m) {
         const statusId = m[1]
         setStatusIds([statusId])
