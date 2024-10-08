@@ -101,7 +101,7 @@ const Tweet = ({status_id}: {status_id: string}) => {
     return (
       <div className="tweet">
         <hr />
-        {tweet.error.text}: <a href={`https://twitter.com/dummy/status/${status_id}`}>{status_id}</a>
+        {tweet.error.text}: <a href={`https://x.com/dummy/status/${status_id}`}>{status_id}</a>
       </div>
     )
   }
@@ -111,9 +111,9 @@ const Tweet = ({status_id}: {status_id: string}) => {
       <hr />
       <div className="tweet-desc">
         <img src={tweet?.includes?.user?.profile_image_url_https} alt="" />
-        <a href={`https://twitter.com/${tweet?.includes?.user?.screen_name}`}>@{tweet?.includes?.user?.screen_name}</a>
+        <a href={`https://x.com/${tweet?.includes?.user?.screen_name}`}>@{tweet?.includes?.user?.screen_name}</a>
         <span>　</span>
-        <a href={`https://twitter.com/dummy/status/${status_id}`}>{status_id}</a>
+        <a href={`https://x.com/dummy/status/${status_id}`}>{status_id}</a>
         <br />
         <span>{tweet?.data?.text}</span>
       </div>
